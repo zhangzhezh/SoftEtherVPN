@@ -44,9 +44,9 @@
 #include "Mayaqua/Tick64.h"
 
 // Download and save intermediate certificates if necessary
-bool DownloadAndSaveIntermediateCertificatesIfNecessary(X *x)
+bool DownloadAndSaveIntermediateCertificatesIfNecessary(X* x)
 {
-	LIST *o;
+	LIST* o;
 	bool ret = false;
 	// Validate arguments
 	if (x == NULL)
@@ -69,11 +69,11 @@ bool DownloadAndSaveIntermediateCertificatesIfNecessary(X *x)
 }
 
 // Attempt to fetch the full chain of the specified cert
-bool TryGetRootCertChain(LIST *o, X *x, bool auto_save, X **found_root_x)
+bool TryGetRootCertChain(LIST* o, X* x, bool auto_save, X** found_root_x)
 {
 	bool ret = false;
-	LIST *chain = NULL;
-	LIST *current_chain_dir = NULL;
+	LIST* chain = NULL;
+	LIST* current_chain_dir = NULL;
 	// Validate arguments
 	if (o == NULL || x == NULL)
 	{
@@ -87,7 +87,7 @@ bool TryGetRootCertChain(LIST *o, X *x, bool auto_save, X **found_root_x)
 	if (ret)
 	{
 		UINT i;
-		DIRLIST *dir;
+		DIRLIST* dir;
 		wchar_t dirname[MAX_SIZE];
 		wchar_t exedir[MAX_SIZE];
 
@@ -101,9 +101,9 @@ bool TryGetRootCertChain(LIST *o, X *x, bool auto_save, X **found_root_x)
 			dir = EnumDirW(dirname);
 			if (dir != NULL)
 			{
-				for (i = 0;i < dir->NumFiles;i++)
+				for (i = 0; i < dir->NumFiles; i++)
 				{
-					DIRENT *e = dir->File[i];
+					DIRENT* e = dir->File[i];
 
 					if (e->Folder == false)
 					{
@@ -125,10 +125,10 @@ bool TryGetRootCertChain(LIST *o, X *x, bool auto_save, X **found_root_x)
 		current_chain_dir = NewCertList(false);
 		AddAllChainCertsToCertList(current_chain_dir);
 
-		for (i = 0;i < LIST_NUM(chain);i++)
+		for (i = 0; i < LIST_NUM(chain); i++)
 		{
 			wchar_t tmp[MAX_SIZE];
-			X *xx = LIST_DATA(chain, i);
+			X* xx = LIST_DATA(chain, i);
 
 			GetAllNameFromName(tmp, sizeof(tmp), xx->subject_name);
 
@@ -141,7 +141,7 @@ bool TryGetRootCertChain(LIST *o, X *x, bool auto_save, X **found_root_x)
 				wchar_t hex[128];
 				UCHAR hash[SHA1_SIZE];
 				wchar_t tmp[MAX_SIZE];
-				BUF *b;
+				BUF* b;
 
 				GetXDigest(xx, hash, true);
 				BinToStr(hex_a, sizeof(hex_a), hash, SHA1_SIZE);
@@ -178,10 +178,10 @@ bool TryGetRootCertChain(LIST *o, X *x, bool auto_save, X **found_root_x)
 }
 
 // Try get the parent cert
-bool TryGetParentCertFromCertList(LIST *o, X *x, LIST *found_chain)
+bool TryGetParentCertFromCertList(LIST* o, X* x, LIST* found_chain)
 {
 	bool ret = false;
-	X *r;
+	X* r;
 	bool do_free = false;
 	// Validate arguments
 	if (o == NULL || x == NULL || found_chain == NULL)
@@ -237,7 +237,7 @@ bool TryGetParentCertFromCertList(LIST *o, X *x, LIST *found_chain)
 }
 
 // Find the issuer of the cert from the cert list
-X *FindCertIssuerFromCertList(LIST *o, X *x)
+X* FindCertIssuerFromCertList(LIST* o, X* x)
 {
 	UINT i;
 	// Validate arguments
@@ -251,9 +251,9 @@ X *FindCertIssuerFromCertList(LIST *o, X *x)
 		return NULL;
 	}
 
-	for (i = 0;i < LIST_NUM(o);i++)
+	for (i = 0; i < LIST_NUM(o); i++)
 	{
-		X *xx = LIST_DATA(o, i);
+		X* xx = LIST_DATA(o, i);
 
 		if (CheckXEx(x, xx, true, true))
 		{
@@ -268,11 +268,11 @@ X *FindCertIssuerFromCertList(LIST *o, X *x)
 }
 
 // Download a cert by using HTTP
-X *DownloadCert(char *url)
+X* DownloadCert(char* url)
 {
-	BUF *b;
+	BUF* b;
 	URL_DATA url_data;
-	X *ret = NULL;
+	X* ret = NULL;
 	// Validate arguments
 	if (IsEmptyStr(url))
 	{
@@ -305,9 +305,9 @@ X *DownloadCert(char *url)
 }
 
 // New cert list
-LIST *NewCertList(bool load_root_and_chain)
+LIST* NewCertList(bool load_root_and_chain)
 {
-	LIST *o;
+	LIST* o;
 
 	o = NewList(NULL);
 
@@ -321,7 +321,7 @@ LIST *NewCertList(bool load_root_and_chain)
 }
 
 // Free cert list
-void FreeCertList(LIST *o)
+void FreeCertList(LIST* o)
 {
 	UINT i;
 	// Validate arguments
@@ -330,9 +330,9 @@ void FreeCertList(LIST *o)
 		return;
 	}
 
-	for (i = 0;i < LIST_NUM(o);i++)
+	for (i = 0; i < LIST_NUM(o); i++)
 	{
-		X *x = LIST_DATA(o, i);
+		X* x = LIST_DATA(o, i);
 
 		FreeX(x);
 	}
@@ -341,7 +341,7 @@ void FreeCertList(LIST *o)
 }
 
 // Check whether the cert is in the cert list
-bool IsXInCertList(LIST *o, X *x)
+bool IsXInCertList(LIST* o, X* x)
 {
 	UINT i;
 	// Validate arguments
@@ -350,9 +350,9 @@ bool IsXInCertList(LIST *o, X *x)
 		return false;
 	}
 
-	for (i = 0;i < LIST_NUM(o);i++)
+	for (i = 0; i < LIST_NUM(o); i++)
 	{
-		X *xx = LIST_DATA(o, i);
+		X* xx = LIST_DATA(o, i);
 
 		if (CompareX(x, xx))
 		{
@@ -364,7 +364,7 @@ bool IsXInCertList(LIST *o, X *x)
 }
 
 // Add a cert to the cert list
-void AddXToCertList(LIST *o, X *x)
+void AddXToCertList(LIST* o, X* x)
 {
 	// Validate arguments
 	if (o == NULL || x == NULL)
@@ -386,11 +386,11 @@ void AddXToCertList(LIST *o, X *x)
 }
 
 // Add all chain certs to the cert list
-void AddAllChainCertsToCertList(LIST *o)
+void AddAllChainCertsToCertList(LIST* o)
 {
 	wchar_t dirname[MAX_SIZE];
 	wchar_t exedir[MAX_SIZE];
-	DIRLIST *dir;
+	DIRLIST* dir;
 	// Validate arguments
 	if (o == NULL)
 	{
@@ -409,14 +409,14 @@ void AddAllChainCertsToCertList(LIST *o)
 	{
 		UINT i;
 
-		for (i = 0;i < dir->NumFiles;i++)
+		for (i = 0; i < dir->NumFiles; i++)
 		{
-			DIRENT *e = dir->File[i];
+			DIRENT* e = dir->File[i];
 
 			if (e->Folder == false)
 			{
 				wchar_t tmp[MAX_SIZE];
-				X *x;
+				X* x;
 
 				CombinePathW(tmp, sizeof(tmp), dirname, e->FileNameW);
 
@@ -436,10 +436,10 @@ void AddAllChainCertsToCertList(LIST *o)
 }
 
 // Add all root certs to the cert list
-void AddAllRootCertsToCertList(LIST *o)
+void AddAllRootCertsToCertList(LIST* o)
 {
-	BUF *buf;
-	PACK *p;
+	BUF* buf;
+	PACK* p;
 	UINT num_ok = 0, num_error = 0;
 	// Validate arguments
 	if (o == NULL)
@@ -460,14 +460,14 @@ void AddAllRootCertsToCertList(LIST *o)
 		UINT num = PackGetIndexCount(p, "cert");
 		UINT i;
 
-		for (i = 0;i < num;i++)
+		for (i = 0; i < num; i++)
 		{
 			bool ok = false;
-			BUF *b = PackGetBufEx(p, "cert", i);
+			BUF* b = PackGetBufEx(p, "cert", i);
 
 			if (b != NULL)
 			{
-				X *x = BufToX(b, false);
+				X* x = BufToX(b, false);
 
 				if (x != NULL)
 				{
@@ -500,7 +500,7 @@ void AddAllRootCertsToCertList(LIST *o)
 }
 
 // Convert the date of YYYYMMDD format to a number
-UINT64 ShortStrToDate64(char *str)
+UINT64 ShortStrToDate64(char* str)
 {
 	UINT v;
 	SYSTEMTIME st;
@@ -522,7 +522,7 @@ UINT64 ShortStrToDate64(char *str)
 }
 
 // Handle the response that is returned from the server in the update client
-void UpdateClientThreadProcessResults(UPDATE_CLIENT *c, BUF *b)
+void UpdateClientThreadProcessResults(UPDATE_CLIENT* c, BUF* b)
 {
 	bool exit = false;
 	// Validate arguments
@@ -535,7 +535,7 @@ void UpdateClientThreadProcessResults(UPDATE_CLIENT *c, BUF *b)
 
 	while (true)
 	{
-		char *line = CfgReadNextLine(b);
+		char* line = CfgReadNextLine(b);
 		if (line == NULL)
 		{
 			break;
@@ -545,7 +545,7 @@ void UpdateClientThreadProcessResults(UPDATE_CLIENT *c, BUF *b)
 
 		if (StartWith(line, "#") == false && IsEmptyStr(line) == false)
 		{
-			TOKEN_LIST *t = ParseTokenWithNullStr(line, " \t");
+			TOKEN_LIST* t = ParseTokenWithNullStr(line, " \t");
 
 			if (t != NULL)
 			{
@@ -587,14 +587,14 @@ void UpdateClientThreadProcessResults(UPDATE_CLIENT *c, BUF *b)
 }
 
 // Update client main process
-void UpdateClientThreadMain(UPDATE_CLIENT *c)
+void UpdateClientThreadMain(UPDATE_CLIENT* c)
 {
 	char url[MAX_SIZE];
 	char id[MAX_SIZE];
 	URL_DATA data;
-	BUF *cert_hash;
+	BUF* cert_hash;
 	UINT ret = 0;
-	BUF *recv;
+	BUF* recv;
 	// Validate arguments
 	if (c == NULL)
 	{
@@ -623,7 +623,7 @@ void UpdateClientThreadMain(UPDATE_CLIENT *c)
 	recv = HttpRequestEx3(&data, NULL, UPDATE_CONNECT_TIMEOUT, UPDATE_COMM_TIMEOUT, &ret, false, NULL, NULL,
 		NULL, ((cert_hash != NULL && (cert_hash->Size % SHA1_SIZE) == 0) ? cert_hash->Buf : NULL),
 		(cert_hash != NULL ? (cert_hash->Size / SHA1_SIZE) : 0),
-		(bool *)&c->HaltFlag, 0, NULL, NULL);
+		(bool*)&c->HaltFlag, 0, NULL, NULL);
 
 	FreeBuf(cert_hash);
 
@@ -636,9 +636,9 @@ void UpdateClientThreadMain(UPDATE_CLIENT *c)
 }
 
 // Update client main thread
-void UpdateClientThreadProc(THREAD *thread, void *param)
+void UpdateClientThreadProc(THREAD* thread, void* param)
 {
-	UPDATE_CLIENT *c = (UPDATE_CLIENT *)param;
+	UPDATE_CLIENT* c = (UPDATE_CLIENT*)param;
 	bool first_loop = true;
 	// Validate arguments
 	if (thread == NULL || param == NULL)
@@ -694,7 +694,7 @@ void UpdateClientThreadProc(THREAD *thread, void *param)
 }
 
 // Update the configuration of the update client
-void SetUpdateClientSetting(UPDATE_CLIENT *c, UPDATE_CLIENT_SETTING *s)
+void SetUpdateClientSetting(UPDATE_CLIENT* c, UPDATE_CLIENT_SETTING* s)
 {
 	// Validate arguments
 	if (c == NULL || s == NULL)
@@ -708,9 +708,9 @@ void SetUpdateClientSetting(UPDATE_CLIENT *c, UPDATE_CLIENT_SETTING *s)
 }
 
 // Start the update client
-UPDATE_CLIENT *NewUpdateClient(UPDATE_NOTIFY_PROC *cb, UPDATE_ISFOREGROUND_PROC *isforeground_cb, void *param, char *family_name, char *software_name, wchar_t *software_title, UINT my_build, UINT64 my_date, char *my_lang, UPDATE_CLIENT_SETTING *current_setting, char *client_id)
+UPDATE_CLIENT* NewUpdateClient(UPDATE_NOTIFY_PROC* cb, UPDATE_ISFOREGROUND_PROC* isforeground_cb, void* param, char* family_name, char* software_name, wchar_t* software_title, UINT my_build, UINT64 my_date, char* my_lang, UPDATE_CLIENT_SETTING* current_setting, char* client_id)
 {
-	UPDATE_CLIENT *c;
+	UPDATE_CLIENT* c;
 	// Validate arguments
 	if (family_name == NULL || software_title == NULL || software_name == NULL || my_build == 0 ||
 		my_lang == NULL || current_setting == NULL || cb == NULL)
@@ -744,7 +744,7 @@ UPDATE_CLIENT *NewUpdateClient(UPDATE_NOTIFY_PROC *cb, UPDATE_ISFOREGROUND_PROC 
 }
 
 // Terminate the update client
-void FreeUpdateClient(UPDATE_CLIENT *c)
+void FreeUpdateClient(UPDATE_CLIENT* c)
 {
 	// Validate arguments
 	if (c == NULL)
@@ -766,11 +766,11 @@ void FreeUpdateClient(UPDATE_CLIENT *c)
 }
 
 // Generate unique IDs for each machine
-void GenerateMachineUniqueHash(void *data)
+void GenerateMachineUniqueHash(void* data)
 {
-	BUF *b;
+	BUF* b;
 	char name[64];
-	OS_INFO *osinfo;
+	OS_INFO* osinfo;
 	UINT64 iphash = 0;
 	// Validate arguments
 	if (data == NULL)
@@ -804,7 +804,7 @@ void GenerateMachineUniqueHash(void *data)
 }
 
 // Convert a node information to a string
-void NodeInfoToStr(wchar_t *str, UINT size, NODE_INFO *info)
+void NodeInfoToStr(wchar_t* str, UINT size, NODE_INFO* info)
 {
 	char client_ip[128], server_ip[128], proxy_ip[128], unique_id[128];
 	// Validate arguments
@@ -829,9 +829,9 @@ void NodeInfoToStr(wchar_t *str, UINT size, NODE_INFO *info)
 }
 
 // Accept the password change
-UINT ChangePasswordAccept(CONNECTION *c, PACK *p)
+UINT ChangePasswordAccept(CONNECTION* c, PACK* p)
 {
-	CEDAR *cedar;
+	CEDAR* cedar;
 	UCHAR random[SHA1_SIZE];
 	char hubname[MAX_HUBNAME_LEN + 1];
 	char username[MAX_USERNAME_LEN + 1];
@@ -840,7 +840,7 @@ UINT ChangePasswordAccept(CONNECTION *c, PACK *p)
 	UCHAR new_password_ntlm[SHA1_SIZE];
 	UCHAR check_secure_old_password[SHA1_SIZE];
 	UINT ret = ERR_NO_ERROR;
-	HUB *hub;
+	HUB* hub;
 	// Validate arguments
 	if (c == NULL || p == NULL)
 	{
@@ -888,7 +888,7 @@ UINT ChangePasswordAccept(CONNECTION *c, PACK *p)
 
 		AcLock(hub);
 		{
-			USER *u = AcGetUser(hub, username);
+			USER* u = AcGetUser(hub, username);
 			if (u == NULL)
 			{
 				HLog(hub, "LH_CHANGE_PASSWORD_2", c->Name, username);
@@ -898,7 +898,7 @@ UINT ChangePasswordAccept(CONNECTION *c, PACK *p)
 			{
 				Lock(u->lock);
 				{
-					if (u->AuthType	!= AUTHTYPE_PASSWORD)
+					if (u->AuthType != AUTHTYPE_PASSWORD)
 					{
 						// Not a password authentication
 						HLog(hub, "LH_CHANGE_PASSWORD_3", c->Name, username);
@@ -924,7 +924,7 @@ UINT ChangePasswordAccept(CONNECTION *c, PACK *p)
 						if (fix_password == false)
 						{
 							// Confirmation of the old password
-							AUTHPASSWORD *pw = (AUTHPASSWORD *)u->AuthData;
+							AUTHPASSWORD* pw = (AUTHPASSWORD*)u->AuthData;
 
 							SecurePassword(check_secure_old_password, pw->HashedKey, random);
 							if (Cmp(check_secure_old_password, secure_old_password, SHA1_SIZE) != 0)
@@ -965,15 +965,15 @@ UINT ChangePasswordAccept(CONNECTION *c, PACK *p)
 }
 
 // Change the password
-UINT ChangePassword(CEDAR *cedar, CLIENT_OPTION *o, char *hubname, char *username, char *old_pass, char *new_pass)
+UINT ChangePassword(CEDAR* cedar, CLIENT_OPTION* o, char* hubname, char* username, char* old_pass, char* new_pass)
 {
 	UINT ret = ERR_NO_ERROR;
 	UCHAR old_password[SHA1_SIZE];
 	UCHAR secure_old_password[SHA1_SIZE];
 	UCHAR new_password[SHA1_SIZE];
 	UCHAR new_password_ntlm[MD5_SIZE];
-	SOCK *sock;
-	SESSION *s;
+	SOCK* sock;
+	SESSION* s;
 	// Validate arguments
 	if (cedar == NULL || o == NULL || hubname == NULL || username == NULL || old_pass == NULL || new_pass == NULL)
 	{
@@ -986,7 +986,7 @@ UINT ChangePassword(CEDAR *cedar, CLIENT_OPTION *o, char *hubname, char *usernam
 
 	if (s != NULL)
 	{
-		PACK *p = NewPack();
+		PACK* p = NewPack();
 
 		sock = s->Connection->FirstSock;
 
@@ -1006,7 +1006,7 @@ UINT ChangePassword(CEDAR *cedar, CLIENT_OPTION *o, char *hubname, char *usernam
 
 		if (HttpClientSend(sock, p))
 		{
-			PACK *p = HttpClientRecv(sock);
+			PACK* p = HttpClientRecv(sock);
 			if (p == NULL)
 			{
 				ret = ERR_DISCONNECTED;
@@ -1030,11 +1030,11 @@ UINT ChangePassword(CEDAR *cedar, CLIENT_OPTION *o, char *hubname, char *usernam
 }
 
 // Enumerate HUBs
-TOKEN_LIST *EnumHub(SESSION *s)
+TOKEN_LIST* EnumHub(SESSION* s)
 {
-	SOCK *sock;
-	TOKEN_LIST *ret;
-	PACK *p;
+	SOCK* sock;
+	TOKEN_LIST* ret;
+	PACK* p;
 	UINT num;
 	UINT i;
 	// Validate arguments
@@ -1073,8 +1073,8 @@ TOKEN_LIST *EnumHub(SESSION *s)
 	num = PackGetInt(p, "NumHub");
 	ret = ZeroMalloc(sizeof(TOKEN_LIST));
 	ret->NumTokens = num;
-	ret->Token = ZeroMalloc(sizeof(char *) * num);
-	for (i = 0;i < num;i++)
+	ret->Token = ZeroMalloc(sizeof(char*) * num);
+	for (i = 0; i < num; i++)
 	{
 		char tmp[MAX_SIZE];
 		if (PackGetStrEx(p, "HubName", tmp, sizeof(tmp), i))
@@ -1088,11 +1088,11 @@ TOKEN_LIST *EnumHub(SESSION *s)
 }
 
 // Server accepts a connection from client
-bool ServerAccept(CONNECTION *c)
+bool ServerAccept(CONNECTION* c)
 {
 	bool ret = false;
 	UINT err;
-	PACK *p;
+	PACK* p;
 	char username_real[MAX_SIZE];
 	char method[MAX_SIZE];
 	char hubname[MAX_SIZE];
@@ -1101,11 +1101,11 @@ bool ServerAccept(CONNECTION *c)
 	UCHAR session_key[SHA1_SIZE];
 	UCHAR ticket[SHA1_SIZE];
 	UINT authtype;
-	POLICY *policy;
+	POLICY* policy;
 	UINT assigned_vlan_id = 0;
 	UCHAR assigned_ipc_mac_address[6];
-	HUB *hub;
-	SESSION *s = NULL;
+	HUB* hub;
+	SESSION* s = NULL;
 	UINT64 user_expires = 0;
 	bool use_encrypt;
 	bool use_compress;
@@ -1148,24 +1148,24 @@ bool ServerAccept(CONNECTION *c)
 	bool cluster_dynamic_secure_nat = false;
 	bool no_save_password = false;
 	NODE_INFO node;
-	wchar_t *msg = NULL;
+	wchar_t* msg = NULL;
 	bool suppress_client_update_notification = false;
-	USER *loggedin_user_object = NULL;
-	FARM_MEMBER *f = NULL;
-	SERVER *server = NULL;
+	USER* loggedin_user_object = NULL;
+	FARM_MEMBER* f = NULL;
+	SERVER* server = NULL;
 	POLICY ticketed_policy;
 	UCHAR unique[SHA1_SIZE], unique2[SHA1_SIZE];
-	CEDAR *cedar;
+	CEDAR* cedar;
 	RPC_WINVER winver;
 	UINT client_id;
 	bool no_more_users_in_server = false;
 	UCHAR mschap_v2_server_response_20[20];
 	UINT ms_chap_error = 0;
 	bool is_empty_password = false;
-	char *error_detail = NULL;
-	char *error_detail_2 = NULL;
+	char* error_detail = NULL;
+	char* error_detail_2 = NULL;
 	char ctoken_hash_str[64];
-	EAP_CLIENT *release_me_eap_client = NULL;
+	EAP_CLIENT* release_me_eap_client = NULL;
 
 	// Validate arguments
 	if (c == NULL)
@@ -1206,7 +1206,7 @@ bool ServerAccept(CONNECTION *c)
 
 	if (c->Cedar->Server != NULL)
 	{
-		SERVER *s = c->Cedar->Server;
+		SERVER* s = c->Cedar->Server;
 		server = s;
 
 		if (s->ServerType == SERVER_TYPE_FARM_MEMBER)
@@ -1288,10 +1288,10 @@ bool ServerAccept(CONNECTION *c)
 	// Brand string for the connection limit
 	{
 		char tmp[20];
-		char *branded_ctos = _SS("BRANDED_C_TO_S");
+		char* branded_ctos = _SS("BRANDED_C_TO_S");
 		PackGetStr(p, "branded_ctos", tmp, sizeof(tmp));
 
-		if(StrCmpi(method, "login") == 0 && StrLen(branded_ctos) > 0 && StrCmpi(branded_ctos, tmp) != 0)
+		if (StrCmpi(method, "login") == 0 && StrLen(branded_ctos) > 0 && StrCmpi(branded_ctos, tmp) != 0)
 		{
 			FreePack(p);
 			c->Err = ERR_BRANDED_C_TO_S;
@@ -1369,7 +1369,7 @@ bool ServerAccept(CONNECTION *c)
 		authtype = GetAuthTypeFromPack(p);
 		if (authtype == AUTHTYPE_WIREGUARD_KEY)
 		{
-			WGK *wgk, tmp;
+			WGK* wgk, tmp;
 			bool ok = false;
 
 			if (PackGetStr(p, "key", tmp.Key, sizeof(tmp.Key)) == false)
@@ -1488,9 +1488,9 @@ bool ServerAccept(CONNECTION *c)
 		Lock(hub->lock);
 		{
 			UINT cert_size = 0;
-			void *cert_buf = NULL;
-			USER *user;
-			USERGROUP *group;
+			void* cert_buf = NULL;
+			USER* user;
+			USERGROUP* group;
 			char plain_password[MAX_PASSWORD_LEN + 1];
 			RADIUS_LOGIN_OPTION radius_login_opt;
 
@@ -1549,7 +1549,7 @@ bool ServerAccept(CONNECTION *c)
 				ptr = PackGetInt64(p, "release_me_eap_client");
 				if (ptr != 0)
 				{
-					release_me_eap_client = (EAP_CLIENT *)ptr;
+					release_me_eap_client = (EAP_CLIENT*)ptr;
 				}
 
 				PackGetStr(p, "inproc_postfix", c->InProcPrefix, sizeof(c->InProcPrefix));
@@ -1687,7 +1687,7 @@ bool ServerAccept(CONNECTION *c)
 			{
 				// Log
 				char ip1[64], ip2[64], verstr[64];
-				wchar_t *authtype_str = _UU("LH_AUTH_UNKNOWN");
+				wchar_t* authtype_str = _UU("LH_AUTH_UNKNOWN");
 				switch (authtype)
 				{
 				case CLIENT_AUTHTYPE_ANONYMOUS:
@@ -1743,12 +1743,12 @@ bool ServerAccept(CONNECTION *c)
 						// Returns the MS-CHAPv2 response by using the password if there is a match.
 						// Fail the authentication if no match is found.
 						// (Because, if return a false MS-CHAPv2 Response, PPP client cause an error)
-						LIST *o = NewListFast(NULL);
+						LIST* o = NewListFast(NULL);
 						char tmp1[MAX_SIZE];
 						char tmp2[MAX_SIZE];
 						char tmp3[MAX_SIZE];
 						char tmp4[MAX_SIZE];
-						char *response_pw;
+						char* response_pw;
 						char psk[MAX_SIZE];
 
 						ParseNtUsername(mschap.MsChapV2_PPPUsername, tmp1, sizeof(tmp1), tmp2, sizeof(tmp2), false);
@@ -1778,7 +1778,7 @@ bool ServerAccept(CONNECTION *c)
 
 						if (c->Cedar->Server != NULL)
 						{
-							SERVER *s = c->Cedar->Server;
+							SERVER* s = c->Cedar->Server;
 
 							if (s->IPsecServer != NULL)
 							{
@@ -1844,7 +1844,7 @@ bool ServerAccept(CONNECTION *c)
 					// Password authentication
 					if (PackGetDataSize(p, "secure_password") == SHA1_SIZE)
 					{
-						POLICY *pol = NULL;
+						POLICY* pol = NULL;
 						UCHAR secure_password[SHA1_SIZE];
 						Zero(secure_password, sizeof(secure_password));
 						if (PackGetDataSize(p, "secure_password") == SHA1_SIZE)
@@ -1860,13 +1860,13 @@ bool ServerAccept(CONNECTION *c)
 							Free(pol);
 						}
 
-						if(auth_ret){
+						if (auth_ret) {
 							// Check whether the password was empty
 							UCHAR hashed_empty_password[SHA1_SIZE];
 							UCHAR secure_empty_password[SHA1_SIZE];
 							HashPassword(hashed_empty_password, username, "");
 							SecurePassword(secure_empty_password, hashed_empty_password, c->Random);
-							if(Cmp(secure_password, secure_empty_password, SHA1_SIZE)==0){
+							if (Cmp(secure_password, secure_empty_password, SHA1_SIZE) == 0) {
 								is_empty_password = true;
 							}
 						}
@@ -1874,109 +1874,109 @@ bool ServerAccept(CONNECTION *c)
 					break;
 
 				case CLIENT_AUTHTYPE_PLAIN_PASSWORD:
+				{
+					POLICY* pol = NULL;
+
+					// Plaintext password authentication
+					Zero(plain_password, sizeof(plain_password));
+					PackGetStr(p, "plain_password", plain_password, sizeof(plain_password));
+					if (c->IsInProc == false && StartWith(plain_password, IPC_PASSWORD_MSCHAPV2_TAG))
 					{
-						POLICY *pol = NULL;
-
-						// Plaintext password authentication
+						// Do not allow the MS-CHAPv2 authentication other than IPC sessions
 						Zero(plain_password, sizeof(plain_password));
-						PackGetStr(p, "plain_password", plain_password, sizeof(plain_password));
-						if (c->IsInProc == false && StartWith(plain_password, IPC_PASSWORD_MSCHAPV2_TAG))
+					}
+
+					if (auth_ret == false)
+					{
+						// Attempt a password authentication of normal user
+						UCHAR secure_password[SHA1_SIZE];
+						UCHAR hash_password[SHA1_SIZE];
+						bool is_mschap = StartWith(plain_password, IPC_PASSWORD_MSCHAPV2_TAG);
+
+						HashPassword(hash_password, username, plain_password);
+						SecurePassword(secure_password, hash_password, c->Random);
+
+						if (is_mschap == false)
 						{
-							// Do not allow the MS-CHAPv2 authentication other than IPC sessions
-							Zero(plain_password, sizeof(plain_password));
+							auth_ret = SamAuthUserByPassword(hub, username, c->Random, secure_password, NULL, NULL, NULL);
+						}
+						else
+						{
+							auth_ret = SamAuthUserByPassword(hub, username, c->Random, secure_password,
+								plain_password, mschap_v2_server_response_20, &ms_chap_error);
 						}
 
-						if (auth_ret == false)
+						if (auth_ret && pol == NULL)
 						{
-							// Attempt a password authentication of normal user
-							UCHAR secure_password[SHA1_SIZE];
-							UCHAR hash_password[SHA1_SIZE];
-							bool is_mschap = StartWith(plain_password, IPC_PASSWORD_MSCHAPV2_TAG);
+							pol = SamGetUserPolicy(hub, username);
+						}
+					}
 
-							HashPassword(hash_password, username, plain_password);
-							SecurePassword(secure_password, hash_password, c->Random);
-
-							if (is_mschap == false)
-							{
-								auth_ret = SamAuthUserByPassword(hub, username, c->Random, secure_password, NULL, NULL, NULL);
-							}
-							else
-							{
-								auth_ret = SamAuthUserByPassword(hub, username, c->Random, secure_password,
-									plain_password, mschap_v2_server_response_20, &ms_chap_error);
-							}
-
-							if (auth_ret && pol == NULL)
-							{
-								pol = SamGetUserPolicy(hub, username);
-							}
+					if (auth_ret == false)
+					{
+						// Attempt external authentication registered users
+						bool fail_ext_user_auth = false;
+						if (GetGlobalServerFlag(GSF_DISABLE_RADIUS_AUTH) != 0)
+						{
+							fail_ext_user_auth = true;
 						}
 
-						if (auth_ret == false)
+						if (fail_ext_user_auth == false)
 						{
-							// Attempt external authentication registered users
-							bool fail_ext_user_auth = false;
-							if (GetGlobalServerFlag(GSF_DISABLE_RADIUS_AUTH) != 0)
-							{
-								fail_ext_user_auth = true;
-							}
-
-							if (fail_ext_user_auth == false)
-							{
-								auth_ret = SamAuthUserByPlainPassword(c, hub, username, plain_password, false, mschap_v2_server_response_20, &radius_login_opt);
-							}
-
-							if (auth_ret && pol == NULL)
-							{
-								pol = SamGetUserPolicy(hub, username);
-							}
+							auth_ret = SamAuthUserByPlainPassword(c, hub, username, plain_password, false, mschap_v2_server_response_20, &radius_login_opt);
 						}
 
-						if (auth_ret == false)
+						if (auth_ret && pol == NULL)
 						{
-							// Attempt external authentication asterisk user
-							bool b = false;
-							bool fail_ext_user_auth = false;
+							pol = SamGetUserPolicy(hub, username);
+						}
+					}
 
-							if (GetGlobalServerFlag(GSF_DISABLE_RADIUS_AUTH) != 0)
+					if (auth_ret == false)
+					{
+						// Attempt external authentication asterisk user
+						bool b = false;
+						bool fail_ext_user_auth = false;
+
+						if (GetGlobalServerFlag(GSF_DISABLE_RADIUS_AUTH) != 0)
+						{
+							fail_ext_user_auth = true;
+						}
+
+						if (fail_ext_user_auth == false)
+						{
+							AcLock(hub);
 							{
-								fail_ext_user_auth = true;
+								b = AcIsUser(hub, "*");
 							}
+							AcUnlock(hub);
 
-							if (fail_ext_user_auth == false)
+							// If there is asterisk user, log on as the user
+							if (b)
 							{
-								AcLock(hub);
+								auth_ret = SamAuthUserByPlainPassword(c, hub, username, plain_password, true, mschap_v2_server_response_20, &radius_login_opt);
+								if (auth_ret && pol == NULL)
 								{
-									b = AcIsUser(hub, "*");
+									pol = SamGetUserPolicy(hub, "*");
 								}
-								AcUnlock(hub);
-
-								// If there is asterisk user, log on as the user
-								if (b)
-								{
-									auth_ret = SamAuthUserByPlainPassword(c, hub, username, plain_password, true, mschap_v2_server_response_20, &radius_login_opt);
-									if (auth_ret && pol == NULL)
-									{
-										pol = SamGetUserPolicy(hub, "*");
-									}
-								}
-							}
-						}
-
-						if (pol != NULL)
-						{
-							no_save_password = pol->NoSavePassword;
-							Free(pol);
-						}
-
-						if(auth_ret){
-							// Check whether the password was empty
-							if(IsEmptyStr(plain_password)){
-								is_empty_password = true;
 							}
 						}
 					}
-					break;
+
+					if (pol != NULL)
+					{
+						no_save_password = pol->NoSavePassword;
+						Free(pol);
+					}
+
+					if (auth_ret) {
+						// Check whether the password was empty
+						if (IsEmptyStr(plain_password)) {
+							is_empty_password = true;
+						}
+					}
+				}
+				break;
 
 				case CLIENT_AUTHTYPE_CERT:
 					if (GetGlobalServerFlag(GSF_DISABLE_CERT_AUTH) == 0)
@@ -1994,14 +1994,14 @@ bool ServerAccept(CONNECTION *c)
 								{
 									if (PackGetData(p, "sign", sign))
 									{
-										BUF *b = NewBuf();
-										X *x;
+										BUF* b = NewBuf();
+										X* x;
 										WriteBuf(b, cert_buf, cert_size);
 										x = BufToX(b, false);
 										if (x != NULL && x->is_compatible_bit &&
 											sign_size == (x->bits / 8))
 										{
-											K *k = GetKFromX(x);
+											K* k = GetKFromX(x);
 											// Verify the signature received from the client
 											if (RsaVerifyEx(c->Random, SHA1_SIZE, sign, k, x->bits))
 											{
@@ -2071,8 +2071,8 @@ bool ServerAccept(CONNECTION *c)
 							cert_buf = ZeroMalloc(cert_size);
 							if (PackGetData(p, "cert", cert_buf))
 							{
-								BUF *b = NewBuf();
-								X *x;
+								BUF* b = NewBuf();
+								X* x;
 								WriteBuf(b, cert_buf, cert_size);
 								x = BufToX(b, false);
 								if (x != NULL && x->is_compatible_bit)
@@ -2135,7 +2135,7 @@ bool ServerAccept(CONNECTION *c)
 			{
 				if (is_empty_password)
 				{
-					const SOCK *s = c->FirstSock;
+					const SOCK* s = c->FirstSock;
 					if (s != NULL && IsLocalHostIP(&s->RemoteIP) == false)
 					{
 						if (StrCmpi(username, ADMINISTRATOR_USERNAME) == 0 || GetHubAdminOption(hub, "deny_empty_password") != 0)
@@ -2375,7 +2375,7 @@ bool ServerAccept(CONNECTION *c)
 			}
 
 			if (hub->Option->ClientMinimumRequiredBuild > c->ClientBuild &&
-				 InStrEx(c->ClientStr, "client", false))
+				InStrEx(c->ClientStr, "client", false))
 			{
 				// Build number of the client is too small
 				HLog(hub, "LH_CLIENT_VERSION_OLD", c->Name, c->ClientBuild, hub->Option->ClientMinimumRequiredBuild);
@@ -2389,7 +2389,7 @@ bool ServerAccept(CONNECTION *c)
 			}
 
 			if (hub->Option->RequiredClientId != 0 &&
-				hub->Option->RequiredClientId != client_id && 
+				hub->Option->RequiredClientId != client_id &&
 				InStrEx(c->ClientStr, "client", false))
 			{
 				// Build number of the client is too small
@@ -2488,7 +2488,7 @@ bool ServerAccept(CONNECTION *c)
 			if (local_host_session == false)
 			{
 				// Make further judgment whether localhost session
-				SOCK *s = c->FirstSock;
+				SOCK* s = c->FirstSock;
 
 				if (s != NULL)
 				{
@@ -2557,9 +2557,9 @@ bool ServerAccept(CONNECTION *c)
 
 						num = 0;
 
-						for (i = 0;i < t.NumSession;i++)
+						for (i = 0; i < t.NumSession; i++)
 						{
-							RPC_ENUM_SESSION_ITEM *e = &t.Sessions[i];
+							RPC_ENUM_SESSION_ITEM* e = &t.Sessions[i];
 
 							if (e->BridgeMode == false && e->Layer3Mode == false && e->LinkMode == false && e->CurrentNumTcp != 0)
 							{
@@ -2607,7 +2607,7 @@ bool ServerAccept(CONNECTION *c)
 
 			if (farm_controller)
 			{
-				wchar_t *msg = GetHubMsg(hub);
+				wchar_t* msg = GetHubMsg(hub);
 
 				Unlock(hub->lock);
 
@@ -2636,8 +2636,8 @@ bool ServerAccept(CONNECTION *c)
 						if (f->Me == false)
 						{
 							UCHAR ticket[SHA1_SIZE];
-							PACK *p;
-							BUF *b;
+							PACK* p;
+							BUF* b;
 							UINT i;
 
 							SLog(c->Cedar, "LH_FARM_SELECT_4", c->Name, f->hostname);
@@ -2650,7 +2650,7 @@ bool ServerAccept(CONNECTION *c)
 							p = NewPack();
 							PackAddInt(p, "Redirect", 1);
 							PackAddIp32(p, "Ip", f->Ip);
-							for (i = 0;i < f->NumPort;i++)
+							for (i = 0; i < f->NumPort; i++)
 							{
 								PackAddIntEx(p, "Port", f->Ports[i], i, f->NumPort);
 							}
@@ -2658,7 +2658,7 @@ bool ServerAccept(CONNECTION *c)
 
 							if (true)
 							{
-								char *utf = CopyUniToUtf(msg);
+								char* utf = CopyUniToUtf(msg);
 
 								PackAddData(p, "Msg", utf, StrLen(utf));
 
@@ -2728,10 +2728,10 @@ bool ServerAccept(CONNECTION *c)
 				// number of sessions defined by the Virtual HUB management options
 				if (
 					(GetHubAdminOption(hub, "max_sessions") != 0 &&
-					(Count(hub->NumSessionsClient) + Count(hub->NumSessionsBridge)) >= GetHubAdminOption(hub, "max_sessions"))
+						(Count(hub->NumSessionsClient) + Count(hub->NumSessionsBridge)) >= GetHubAdminOption(hub, "max_sessions"))
 					||
 					(hub->Option->MaxSession != 0 &&
-					(Count(hub->NumSessionsClient) + Count(hub->NumSessionsBridge)) >= hub->Option->MaxSession))
+						(Count(hub->NumSessionsClient) + Count(hub->NumSessionsBridge)) >= hub->Option->MaxSession))
 				{
 					// Can not connect any more
 					Unlock(hub->lock);
@@ -2754,7 +2754,7 @@ bool ServerAccept(CONNECTION *c)
 					Count(hub->NumSessionsClient) >= GetHubAdminOption(hub, "max_sessions_client") && hub->Cedar->Server != NULL && hub->Cedar->Server->ServerType != SERVER_TYPE_FARM_MEMBER)
 					||
 					(hub->FarmMember_MaxSessionClientBridgeApply &&
-					Count(hub->NumSessionsClient) >= hub->FarmMember_MaxSessionClient))
+						Count(hub->NumSessionsClient) >= hub->FarmMember_MaxSessionClient))
 				{
 					// Can not connect any more
 					Unlock(hub->lock);
@@ -2777,7 +2777,7 @@ bool ServerAccept(CONNECTION *c)
 					Count(hub->NumSessionsBridge) >= GetHubAdminOption(hub, "max_sessions_bridge") && hub->Cedar->Server != NULL && hub->Cedar->Server->ServerType != SERVER_TYPE_FARM_MEMBER)
 					||
 					(hub->FarmMember_MaxSessionClientBridgeApply &&
-					Count(hub->NumSessionsBridge) >= hub->FarmMember_MaxSessionBridge))
+						Count(hub->NumSessionsBridge) >= hub->FarmMember_MaxSessionBridge))
 				{
 					// Can not connect any more
 					Unlock(hub->lock);
@@ -3138,11 +3138,11 @@ bool ServerAccept(CONNECTION *c)
 		if (true)
 		{
 			// A message to be displayed in the VPN Client (Will not be displayed if the VPN Gate Virtual HUB)
-			char *utf;
+			char* utf;
 			wchar_t winver_msg_client[3800];
 			wchar_t winver_msg_server[3800];
 			UINT tmpsize;
-			wchar_t *tmp;
+			wchar_t* tmp;
 			RPC_WINVER server_winver;
 
 			GetWinVer(&server_winver);
@@ -3196,7 +3196,7 @@ bool ServerAccept(CONNECTION *c)
 				if (s != NULL && s->IsRUDPSession && c != NULL)
 				{
 					// Show the warning message if the connection is made by NAT-T
-					wchar_t *tmp2;
+					wchar_t* tmp2;
 					UINT tmp2_size = 2400 * sizeof(wchar_t);
 					char local_name[128];
 					wchar_t local_name_2[128];
@@ -3240,7 +3240,7 @@ bool ServerAccept(CONNECTION *c)
 				}
 			}
 			UniStrCat(tmp, tmpsize, msg);
-			
+
 			utf = CopyUniToUtf(tmp);
 
 			PackAddData(p, "Msg", utf, StrLen(utf));
@@ -3253,8 +3253,8 @@ bool ServerAccept(CONNECTION *c)
 
 		// Brand string for the connection limit
 		{
-			char *branded_cfroms = _SS("BRANDED_C_FROM_S");
-			if(StrLen(branded_cfroms) > 0)
+			char* branded_cfroms = _SS("BRANDED_C_FROM_S");
+			if (StrLen(branded_cfroms) > 0)
 			{
 				PackAddStr(p, "branded_cfroms", branded_cfroms);
 			}
@@ -3286,7 +3286,7 @@ bool ServerAccept(CONNECTION *c)
 		if (s->HalfConnection)
 		{
 			// The direction of the first socket is client to server
-			TCPSOCK *ts = (TCPSOCK *)LIST_DATA(c->Tcp->TcpSockList, 0);
+			TCPSOCK* ts = (TCPSOCK*)LIST_DATA(c->Tcp->TcpSockList, 0);
 			ts->Direction = TCP_CLIENT_TO_SERVER;
 		}
 
@@ -3391,8 +3391,8 @@ bool ServerAccept(CONNECTION *c)
 	}
 	else if (StrCmpi(method, "additional_connect") == 0)
 	{
-		SOCK *sock;
-		TCPSOCK *ts;
+		SOCK* sock;
+		TCPSOCK* ts;
 		UINT dummy;
 
 		c->Type = CONNECTION_TYPE_ADDITIONAL;
@@ -3473,42 +3473,62 @@ bool ServerAccept(CONNECTION *c)
 		ts = NewTcpSock(sock);
 		SetTimeout(sock, CONNECTING_TIMEOUT);
 		direction = TCP_BOTH;
-		LockList(s->Connection->Tcp->TcpSockList);
-		{
-			if (s->HalfConnection)
-			{
-				// In half-connection, directions of the TCP connections are automatically
-				// adjusted by examining all current direction of the TCP connections
-				UINT i, c2s, s2c;
-				c2s = s2c = 0;
-				for (i = 0;i < LIST_NUM(s->Connection->Tcp->TcpSockList);i++)
-				{
-					TCPSOCK *ts = (TCPSOCK *)LIST_DATA(s->Connection->Tcp->TcpSockList, i);
-					if (ts->Direction == TCP_SERVER_TO_CLIENT)
-					{
-						s2c++;
-					}
-					else
-					{
-						c2s++;
-					}
-				}
-				if (s2c > c2s)
-				{
-					direction = TCP_CLIENT_TO_SERVER;
-				}
-				else
-				{
-					direction = TCP_SERVER_TO_CLIENT;
-				}
-				Debug("%u/%u\n", s2c, c2s);
-				ts->Direction = direction;
-			}
-		}
-		UnlockList(s->Connection->Tcp->TcpSockList);
+		//LockList(s->Connection->Tcp->TcpSockList);
+		//{
+		//	if (s->HalfConnection)
+		//	{
+		//		// In half-connection, directions of the TCP connections are automatically
+		//		// adjusted by examining all current direction of the TCP connections
+		//		UINT i, c2s, s2c;
+		//		c2s = s2c = 0;
+		//		for (i = 0; i < LIST_NUM(s->Connection->Tcp->TcpSockList); i++)
+		//		{
+		//			TCPSOCK* ts = (TCPSOCK*)LIST_DATA(s->Connection->Tcp->TcpSockList, i);
+		//			if (ts->Direction == TCP_SERVER_TO_CLIENT)
+		//			{
+		//				s2c++;
+		//			}
+		//			else
+		//			{
+		//				c2s++;
+		//			}
+		//		}
+		//		//if (s2c > c2s)
+		//		//{
+		//		//	direction = TCP_CLIENT_TO_SERVER;
+		//		//}
+		//		//else
+		//		//{
+		//		//	direction = TCP_SERVER_TO_CLIENT;
+		//		//}
+		//		Debug("%u/%u\n", s2c, c2s);
+		//		//ts->Direction = direction;
+		//		//if (ts->Sock->LocalPort == 50001|| ts->Sock->RemotePort ==50001)
+		//		//{
+		//		//	direction = TCP_CLIENT_TO_SERVER;
+		//		//	ts->Direction = TCP_CLIENT_TO_SERVER;
+		//		//}
+		//		//if (ts->Sock->LocalPort == 50002|| ts->Sock->RemotePort == 50002)
+		//		//{
+		//		//	direction = TCP_SERVER_TO_CLIENT;
+		//		//	ts->Direction = TCP_SERVER_TO_CLIENT;
+		//		//}
+		//	}
+		//}
+		//UnlockList(s->Connection->Tcp->TcpSockList);
 
 		// Return a success result
 		p = PackError(ERR_NO_ERROR);
+		if (ts->Sock->LocalPort == 50001 || ts->Sock->RemotePort == 50001)
+		{
+			direction = TCP_CLIENT_TO_SERVER;
+			ts->Direction = TCP_CLIENT_TO_SERVER;
+		}
+		if (ts->Sock->LocalPort == 50002 || ts->Sock->RemotePort == 50002)
+		{
+			direction = TCP_SERVER_TO_CLIENT;
+			ts->Direction = TCP_SERVER_TO_CLIENT;
+		}
 		PackAddInt(p, "direction", direction);
 
 		HttpServerSend(c->FirstSock, p);
@@ -3541,7 +3561,7 @@ bool ServerAccept(CONNECTION *c)
 	{
 		// Enumerate the Virtual HUB
 		UINT i, num;
-		LIST *o;
+		LIST* o;
 		o = NewListFast(NULL);
 
 		c->Type = CONNECTION_TYPE_ENUM_HUB;
@@ -3551,9 +3571,9 @@ bool ServerAccept(CONNECTION *c)
 		LockList(c->Cedar->HubList);
 		{
 			num = LIST_NUM(c->Cedar->HubList);
-			for (i = 0;i < num;i++)
+			for (i = 0; i < num; i++)
 			{
-				HUB *h = LIST_DATA(c->Cedar->HubList, i);
+				HUB* h = LIST_DATA(c->Cedar->HubList, i);
 				if (h->Option != NULL && h->Option->NoEnum == false)
 				{
 					Insert(o, CopyStr(h->Name));
@@ -3563,9 +3583,9 @@ bool ServerAccept(CONNECTION *c)
 		UnlockList(c->Cedar->HubList);
 
 		num = LIST_NUM(o);
-		for (i = 0;i < num;i++)
+		for (i = 0; i < num; i++)
 		{
-			char *name = LIST_DATA(o, i);
+			char* name = LIST_DATA(o, i);
 			PackAddStrEx(p, "HubName", name, i, num);
 			Free(name);
 		}
@@ -3586,7 +3606,7 @@ bool ServerAccept(CONNECTION *c)
 	else if (StrCmpi(method, "farm_connect") == 0)
 	{
 		// Server farm connection request
-		CEDAR *cedar = c->Cedar;
+		CEDAR* cedar = c->Cedar;
 		c->Type = CONNECTION_TYPE_FARM_RPC;
 		c->Err = 0;
 		if (c->Cedar->Server == NULL)
@@ -3596,7 +3616,7 @@ bool ServerAccept(CONNECTION *c)
 		}
 		else
 		{
-			SERVER *s = c->Cedar->Server;
+			SERVER* s = c->Cedar->Server;
 			if (s->ServerType != SERVER_TYPE_FARM_CONTROLLER || s->FarmControllerInited == false)
 			{
 				// Not a farm controller
@@ -3627,8 +3647,8 @@ bool ServerAccept(CONNECTION *c)
 				else
 				{
 					// Get the certificate
-					BUF *b;
-					X *server_x;
+					BUF* b;
+					X* server_x;
 
 					SLog(c->Cedar, "LS_FARM_ACCEPT_3", c->Name);
 					b = PackGetBuf(p, "ServerCert");
@@ -3663,10 +3683,10 @@ bool ServerAccept(CONNECTION *c)
 								UINT num_port = PackGetIndexCount(p, "PublicPort");
 								if (num_port >= 1 && num_port <= MAX_PUBLIC_PORT_NUM)
 								{
-									UINT *ports = ZeroMalloc(sizeof(UINT) * num_port);
+									UINT* ports = ZeroMalloc(sizeof(UINT) * num_port);
 									UINT i;
 
-									for (i = 0;i < num_port;i++)
+									for (i = 0; i < num_port; i++)
 									{
 										ports[i] = PackGetIntEx(p, "PublicPort", i);
 									}
@@ -3696,7 +3716,7 @@ bool ServerAccept(CONNECTION *c)
 		FreePack(p);
 		if (err != ERR_NO_ERROR)
 		{
-			PACK *p = PackError(err);
+			PACK* p = PackError(err);
 			HttpServerSend(c->FirstSock, p);
 			FreePack(p);
 		}
@@ -3765,11 +3785,11 @@ CLEANUP:
 
 
 // Create a Node information
-void CreateNodeInfo(NODE_INFO *info, CONNECTION *c)
+void CreateNodeInfo(NODE_INFO* info, CONNECTION* c)
 {
-	SESSION *s;
-	OS_INFO *os;
-	char *product_id;
+	SESSION* s;
+	OS_INFO* os;
+	char* product_id;
 	IP ip;
 	// Validate arguments
 	if (c == NULL)
@@ -3897,9 +3917,9 @@ void CreateNodeInfo(NODE_INFO *info, CONNECTION *c)
 }
 
 // Connect a socket additionally
-SOCK *ClientAdditionalConnectToServer(CONNECTION *c)
+SOCK* ClientAdditionalConnectToServer(CONNECTION* c)
 {
-	SOCK *s;
+	SOCK* s;
 	// Validate arguments
 	if (c == NULL)
 	{
@@ -3907,7 +3927,7 @@ SOCK *ClientAdditionalConnectToServer(CONNECTION *c)
 	}
 
 	// Socket connection
-	s = ClientConnectGetSocket(c, true);
+	s = ClientConnectGetSocketZZ(c, true);
 	if (s == NULL)
 	{
 		// Connection failure
@@ -3970,10 +3990,10 @@ SOCK *ClientAdditionalConnectToServer(CONNECTION *c)
 }
 
 // Attempt to sign by the secure device
-UINT SecureSign(SECURE_SIGN *sign, UINT device_id, char *pin)
+UINT SecureSign(SECURE_SIGN* sign, UINT device_id, char* pin)
 {
-	SECURE *sec;
-	X *x;
+	SECURE* sec;
+	X* x;
 	// Validate arguments
 	if (sign == false || pin == NULL || device_id == 0)
 	{
@@ -4040,11 +4060,11 @@ UINT SecureSign(SECURE_SIGN *sign, UINT device_id, char *pin)
 }
 
 // Client connects to the server additionally
-bool ClientAdditionalConnect(CONNECTION *c, THREAD *t)
+bool ClientAdditionalConnect(CONNECTION* c, THREAD* t)
 {
-	SOCK *s;
-	PACK *p;
-	TCPSOCK *ts;
+	SOCK* s;
+	PACK* p;
+	TCPSOCK* ts;
 	UINT err;
 	UINT direction;
 
@@ -4165,7 +4185,7 @@ bool ClientAdditionalConnect(CONNECTION *c, THREAD *t)
 	{
 		Debug("New Half Connection: %s\n",
 			direction == TCP_SERVER_TO_CLIENT ? "TCP_SERVER_TO_CLIENT" : "TCP_CLIENT_TO_SERVER"
-			);
+		);
 	}
 
 	// Issue the Cancel to the session
@@ -4200,9 +4220,9 @@ CLEANUP:
 }
 
 // Secure device signing thread
-void ClientSecureSignThread(THREAD *thread, void *param)
+void ClientSecureSignThread(THREAD* thread, void* param)
 {
-	SECURE_SIGN_THREAD_PROC *p = (SECURE_SIGN_THREAD_PROC *)param;
+	SECURE_SIGN_THREAD_PROC* p = (SECURE_SIGN_THREAD_PROC*)param;
 	// Validate arguments
 	if (thread == NULL || param == NULL)
 	{
@@ -4216,14 +4236,14 @@ void ClientSecureSignThread(THREAD *thread, void *param)
 }
 
 // Signing with the secure device
-bool ClientSecureSign(CONNECTION *c, UCHAR *sign, UCHAR *random, X **x)
+bool ClientSecureSign(CONNECTION* c, UCHAR* sign, UCHAR* random, X** x)
 {
-	SECURE_SIGN_THREAD_PROC *p;
-	SECURE_SIGN *ss;
-	SESSION *s;
-	CLIENT_OPTION *o;
-	CLIENT_AUTH *a;
-	THREAD *thread;
+	SECURE_SIGN_THREAD_PROC* p;
+	SECURE_SIGN* ss;
+	SESSION* s;
+	CLIENT_OPTION* o;
+	CLIENT_AUTH* a;
+	THREAD* thread;
 	UINT64 start;
 	bool ret;
 	// Validate arguments
@@ -4290,9 +4310,9 @@ bool ClientSecureSign(CONNECTION *c, UCHAR *sign, UCHAR *random, X **x)
 }
 
 // Server certificate confirmation thread
-void ClientCheckServerCertThread(THREAD *thread, void *param)
+void ClientCheckServerCertThread(THREAD* thread, void* param)
 {
-	CHECK_CERT_THREAD_PROC *p = (CHECK_CERT_THREAD_PROC *)param;
+	CHECK_CERT_THREAD_PROC* p = (CHECK_CERT_THREAD_PROC*)param;
 	// Validate arguments
 	if (thread == NULL || param == NULL)
 	{
@@ -4308,12 +4328,12 @@ void ClientCheckServerCertThread(THREAD *thread, void *param)
 }
 
 // Client verify the certificate of the server
-bool ClientCheckServerCert(CONNECTION *c, bool *expired)
+bool ClientCheckServerCert(CONNECTION* c, bool* expired)
 {
-	CLIENT_AUTH *auth;
-	X *x;
-	CHECK_CERT_THREAD_PROC *p;
-	THREAD *thread;
+	CLIENT_AUTH* auth;
+	X* x;
+	CHECK_CERT_THREAD_PROC* p;
+	THREAD* thread;
 	bool ret;
 	UINT64 start;
 	// Validate arguments
@@ -4383,19 +4403,19 @@ bool ClientCheckServerCert(CONNECTION *c, bool *expired)
 }
 
 // Client connects to the server
-bool ClientConnect(CONNECTION *c)
+bool ClientConnect(CONNECTION* c)
 {
 	bool ret = false;
 	bool ok = false;
 	UINT err;
-	SOCK *s;
-	PACK *p = NULL;
+	SOCK* s;
+	PACK* p = NULL;
 	UINT session_key_32;
-	SESSION *sess;
+	SESSION* sess;
 	char session_name[MAX_SESSION_NAME_LEN + 1];
 	char connection_name[MAX_CONNECTION_NAME_LEN + 1];
 	UCHAR session_key[SHA1_SIZE];
-	POLICY *policy;
+	POLICY* policy;
 	bool expired = false;
 	IP server_ip;
 	// Validate arguments
@@ -4420,7 +4440,7 @@ REDIRECTED:
 	{
 		// Do not retry if untrusted or hostname mismatched
 		if (c->Session->LinkModeClient == false && (c->Err == ERR_CERT_NOT_TRUSTED || c->Err == ERR_HOSTNAME_MISMATCH)
-			&& (c->Session->Account == NULL || ! c->Session->Account->RetryOnServerCert))
+			&& (c->Session->Account == NULL || !c->Session->Account->RetryOnServerCert))
 		{
 			c->Session->ForceStopFlag = true;
 		}
@@ -4440,7 +4460,7 @@ REDIRECTED:
 
 		// Do not retry if untrusted or hostname mismatched
 		if (c->Session->LinkModeClient == false && (c->Err == ERR_CERT_NOT_TRUSTED || c->Err == ERR_HOSTNAME_MISMATCH)
-			&& (c->Session->Account == NULL || ! c->Session->Account->RetryOnServerCert))
+			&& (c->Session->Account == NULL || !c->Session->Account->RetryOnServerCert))
 		{
 			c->Session->ForceStopFlag = true;
 		}
@@ -4577,10 +4597,10 @@ REDIRECTED:
 	// Branding string check for the connection limit
 	{
 		char tmp[20];
-		char *branded_cfroms = _SS("BRANDED_C_FROM_S");
+		char* branded_cfroms = _SS("BRANDED_C_FROM_S");
 		PackGetStr(p, "branded_cfroms", tmp, sizeof(tmp));
 
-		if(StrLen(branded_cfroms) > 0 && StrCmpi(branded_cfroms, tmp) != 0)
+		if (StrLen(branded_cfroms) > 0 && StrCmpi(branded_cfroms, tmp) != 0)
 		{
 			c->Err = ERR_BRANDED_C_FROM_S;
 			goto CLEANUP;
@@ -4605,8 +4625,8 @@ REDIRECTED:
 	{
 		// Message retrieval
 		UINT utf_size;
-		char *utf;
-		wchar_t *msg;
+		char* utf;
+		wchar_t* msg;
 
 		utf_size = PackGetDataSize(p, "Msg");
 		utf = ZeroMalloc(utf_size + 8);
@@ -4636,12 +4656,12 @@ REDIRECTED:
 		UINT i;
 		UINT ip;
 		UINT num_port;
-		UINT *ports;
+		UINT* ports;
 		UINT use_port = 0;
 		UINT current_port = c->ServerPort;
 		UCHAR ticket[SHA1_SIZE];
-		X *server_cert = NULL;
-		BUF *b;
+		X* server_cert = NULL;
+		BUF* b;
 
 		// Redirect mode
 		PrintStatus(sess, _UU("STATUS_8"));
@@ -4649,13 +4669,13 @@ REDIRECTED:
 		ip = PackGetIp32(p, "Ip");
 		num_port = MAX(MIN(PackGetIndexCount(p, "Port"), MAX_PUBLIC_PORT_NUM), 1);
 		ports = ZeroMalloc(sizeof(UINT) * num_port);
-		for (i = 0;i < num_port;i++)
+		for (i = 0; i < num_port; i++)
 		{
 			ports[i] = PackGetIntEx(p, "Port", i);
 		}
 
 		// Select a port number
-		for (i = 0;i < num_port;i++)
+		for (i = 0; i < num_port; i++)
 		{
 			if (ports[i] == current_port)
 			{
@@ -5041,7 +5061,7 @@ REDIRECTED:
 	if (c->Session->HalfConnection)
 	{
 		// Processing in the case of half-connection
-		TCPSOCK *ts = (TCPSOCK *)LIST_DATA(c->Tcp->TcpSockList, 0);
+		TCPSOCK* ts = (TCPSOCK*)LIST_DATA(c->Tcp->TcpSockList, 0);
 		ts->Direction = TCP_CLIENT_TO_SERVER;
 	}
 
@@ -5090,12 +5110,12 @@ CLEANUP:
 	}
 
 	return ret;
-}
+	}
 
 // Parse the Welcome packet
-bool ParseWelcomeFromPack(PACK *p, char *session_name, UINT session_name_size,
-						  char *connection_name, UINT connection_name_size,
-						  POLICY **policy)
+bool ParseWelcomeFromPack(PACK* p, char* session_name, UINT session_name_size,
+	char* connection_name, UINT connection_name_size,
+	POLICY** policy)
 {
 	// Validate arguments
 	if (p == NULL || session_name == NULL || connection_name == NULL || policy == NULL)
@@ -5126,9 +5146,9 @@ bool ParseWelcomeFromPack(PACK *p, char *session_name, UINT session_name_size,
 }
 
 // Generate the Welcome packet
-PACK *PackWelcome(SESSION *s)
+PACK* PackWelcome(SESSION* s)
 {
-	PACK *p;
+	PACK* p;
 	// Validate arguments
 	if (s == NULL)
 	{
@@ -5252,7 +5272,7 @@ PACK *PackWelcome(SESSION *s)
 	{
 		if (s->Connection != NULL && s->Connection->FirstSock != NULL)
 		{
-			SOCK *sock = s->Connection->FirstSock;
+			SOCK* sock = s->Connection->FirstSock;
 
 			PackAddIp(p, "azure_real_server_global_ip", &sock->Reverse_MyServerGlobalIp);
 		}
@@ -5273,7 +5293,7 @@ PACK *PackWelcome(SESSION *s)
 	y->value = PackGetInt(p, "policy:" name)
 
 // Get a PACK from the session key
-bool GetSessionKeyFromPack(PACK *p, UCHAR *session_key, UINT *session_key_32)
+bool GetSessionKeyFromPack(PACK* p, UCHAR* session_key, UINT* session_key_32)
 {
 	// Validate arguments
 	if (p == NULL || session_key == NULL || session_key_32 == NULL)
@@ -5295,9 +5315,9 @@ bool GetSessionKeyFromPack(PACK *p, UCHAR *session_key, UINT *session_key_32)
 }
 
 // Get the policy from the PACK
-POLICY *PackGetPolicy(PACK *p)
+POLICY* PackGetPolicy(PACK* p)
 {
-	POLICY *y;
+	POLICY* y;
 	// Validate arguments
 	if (p == NULL)
 	{
@@ -5359,7 +5379,7 @@ POLICY *PackGetPolicy(PACK *p)
 }
 
 // Insert the policy into the PACK
-void PackAddPolicy(PACK *p, POLICY *y)
+void PackAddPolicy(PACK* p, POLICY* y)
 {
 	// Validate arguments
 	if (p == NULL || y == NULL)
@@ -5418,9 +5438,9 @@ void PackAddPolicy(PACK *p, POLICY *y)
 }
 
 // Upload the authentication data for the additional connection
-bool ClientUploadAuth2(CONNECTION *c, SOCK *s)
+bool ClientUploadAuth2(CONNECTION* c, SOCK* s)
 {
-	PACK *p = NULL;
+	PACK* p = NULL;
 	// Validate arguments
 	if (c == NULL)
 	{
@@ -5442,9 +5462,9 @@ bool ClientUploadAuth2(CONNECTION *c, SOCK *s)
 }
 
 // Send a NOOP
-void ClientUploadNoop(CONNECTION *c)
+void ClientUploadNoop(CONNECTION* c)
 {
-	PACK *p;
+	PACK* p;
 	// Validate arguments
 	if (c == NULL)
 	{
@@ -5464,7 +5484,7 @@ void ClientUploadNoop(CONNECTION *c)
 }
 
 // Add client version information to the PACK
-void PackAddClientVersion(PACK *p, CONNECTION *c)
+void PackAddClientVersion(PACK* p, CONNECTION* c)
 {
 	// Validate arguments
 	if (p == NULL || c == NULL)
@@ -5478,12 +5498,12 @@ void PackAddClientVersion(PACK *p, CONNECTION *c)
 }
 
 // Upload the certificate data for the new connection
-bool ClientUploadAuth(CONNECTION *c)
+bool ClientUploadAuth(CONNECTION* c)
 {
-	PACK *p = NULL;
-	CLIENT_AUTH *a;
-	CLIENT_OPTION *o;
-	X *x;
+	PACK* p = NULL;
+	CLIENT_AUTH* a;
+	CLIENT_OPTION* o;
+	X* x;
 	bool ret;
 	NODE_INFO info;
 	UCHAR secure_password[SHA1_SIZE];
@@ -5655,8 +5675,8 @@ bool ClientUploadAuth(CONNECTION *c)
 
 	// Brand string for the connection limit
 	{
-		char *branded_ctos = _SS("BRANDED_C_TO_S");
-		if(StrLen(branded_ctos) > 0)
+		char* branded_ctos = _SS("BRANDED_C_TO_S");
+		if (StrLen(branded_ctos) > 0)
 		{
 			PackAddStr(p, "branded_ctos", branded_ctos);
 		}
@@ -5682,9 +5702,9 @@ bool ClientUploadAuth(CONNECTION *c)
 }
 
 // Upload the Hello packet
-bool ServerUploadHello(CONNECTION *c)
+bool ServerUploadHello(CONNECTION* c)
 {
-	PACK *p;
+	PACK* p;
 	// Validate arguments
 	if (c == NULL)
 	{
@@ -5708,9 +5728,9 @@ bool ServerUploadHello(CONNECTION *c)
 }
 
 // Download the Hello packet
-bool ClientDownloadHello(CONNECTION *c, SOCK *s)
+bool ClientDownloadHello(CONNECTION* c, SOCK* s)
 {
-	PACK *p;
+	PACK* p;
 	UINT err;
 	UCHAR random[SHA1_SIZE];
 	// Validate arguments
@@ -5754,15 +5774,15 @@ bool ClientDownloadHello(CONNECTION *c, SOCK *s)
 }
 
 // Download the signature
-bool ServerDownloadSignature(CONNECTION *c, char **error_detail_str)
+bool ServerDownloadSignature(CONNECTION* c, char** error_detail_str)
 {
-	HTTP_HEADER *h;
-	UCHAR *data;
+	HTTP_HEADER* h;
+	UCHAR* data;
 	UINT data_size;
-	SOCK *s;
+	SOCK* s;
 	UINT num = 0, max = 19;
-	SERVER *server;
-	char *vpn_http_target = HTTP_VPN_TARGET2;
+	SERVER* server;
+	char* vpn_http_target = HTTP_VPN_TARGET2;
 	// Validate arguments
 	if (c == NULL)
 	{
@@ -5948,7 +5968,7 @@ bool ServerDownloadSignature(CONNECTION *c, char **error_detail_str)
 		{
 			// This should not be a VPN client, but interpret a bit more
 			if (StrCmpi(h->Method, "GET") != 0 && StrCmpi(h->Method, "HEAD") != 0
-				 && StrCmpi(h->Method, "POST") != 0)
+				&& StrCmpi(h->Method, "POST") != 0)
 			{
 				// Unsupported method calls
 				HttpSendNotImplemented(s, h->Method, h->Target, h->Version);
@@ -5959,7 +5979,7 @@ bool ServerDownloadSignature(CONNECTION *c, char **error_detail_str)
 				if (StrCmpi(h->Target, "/") == 0)
 				{
 					// Root directory
-					BUF *b = NULL;
+					BUF* b = NULL;
 					*error_detail_str = "HTTP_ROOT";
 
 					if (server->DisableJsonRpcWebApi == false)
@@ -5991,7 +6011,7 @@ bool ServerDownloadSignature(CONNECTION *c, char **error_detail_str)
 					// Show the WebUI if the configuration allow to use the WebUI
 					if (c->Cedar->Server != NULL && c->Cedar->Server->UseWebUI)
 					{
-						WU_WEBPAGE *page;
+						WU_WEBPAGE* page;
 
 						// Show the WebUI
 						page = WuGetPage(h->Target, c->Cedar->WebUI);
@@ -6020,7 +6040,7 @@ bool ServerDownloadSignature(CONNECTION *c, char **error_detail_str)
 						}
 						else if (StartWith(h->Target, HTTP_PICTURES))
 						{
-							BUF *buf;
+							BUF* buf;
 
 							// Lots of photos
 							buf = ReadDump("|Pictures.mht");
@@ -6094,11 +6114,11 @@ bool ServerDownloadSignature(CONNECTION *c, char **error_detail_str)
 }
 
 // Upload a signature
-bool ClientUploadSignature(SOCK *s)
+bool ClientUploadSignature(SOCK* s)
 {
-	HTTP_HEADER *h;
+	HTTP_HEADER* h;
 	UINT water_size, rand_size;
-	UCHAR *water;
+	UCHAR* water;
 	char ip_str[128];
 	// Validate arguments
 	if (s == NULL)
@@ -6137,11 +6157,11 @@ bool ClientUploadSignature(SOCK *s)
 }
 
 // Establish a connection to the server
-SOCK *ClientConnectToServer(CONNECTION *c)
+SOCK* ClientConnectToServer(CONNECTION* c)
 {
-	SOCK *s = NULL;
-	X *x = NULL;
-	K *k = NULL;
+	SOCK* s = NULL;
+	X* x = NULL;
+	K* k = NULL;
 	// Validate arguments
 	if (c == NULL)
 	{
@@ -6155,7 +6175,7 @@ SOCK *ClientConnectToServer(CONNECTION *c)
 	}
 
 	// Get the socket by connecting
-	s = ClientConnectGetSocket(c, false);
+	s = ClientConnectGetSocketZZ(c, false);
 	if (s == NULL)
 	{
 		// Connection failure
@@ -6209,20 +6229,20 @@ SOCK *ClientConnectToServer(CONNECTION *c)
 		return NULL;
 	}
 
-	CLog(c->Cedar->Client, "LC_SSL_CONNECTED", c->Session->ClientOption->AccountName,	s->SslVersion, s->CipherName);
+	CLog(c->Cedar->Client, "LC_SSL_CONNECTED", c->Session->ClientOption->AccountName, s->SslVersion, s->CipherName);
 
 	return s;
 }
 
 // Return a socket by connecting to the server
-SOCK *ClientConnectGetSocket(CONNECTION *c, bool additional_connect)
+SOCK* ClientConnectGetSocket(CONNECTION* c, bool additional_connect)
 {
-	volatile bool *cancel_flag = NULL;
+	volatile bool* cancel_flag = NULL;
 	char hostname[MAX_HOST_NAME_LEN];
 	bool save_resolved_ip = false;
-	CLIENT_OPTION *o;
-	SESSION *sess;
-	SOCK *sock = NULL;
+	CLIENT_OPTION* o;
+	SESSION* sess;
+	SOCK* sock = NULL;
 	IP resolved_ip;
 	// Validate arguments
 	if (c == NULL || c->Session == NULL || c->Session->ClientOption == NULL)
@@ -6282,7 +6302,7 @@ SOCK *ClientConnectGetSocket(CONNECTION *c, bool additional_connect)
 			// If additional_connect == true, follow the IsRUDPSession setting in this session
 			// In additional connect or redirect we do not need ssl verification as the certificate is always compared with a saved one
 			sock = TcpIpConnectEx2(hostname, c->ServerPort,
-				(bool *)cancel_flag, c->hWndForUI, &nat_t_err, (additional_connect ? (!sess->IsRUDPSession) : false),
+				(bool*)cancel_flag, c->hWndForUI, &nat_t_err, (additional_connect ? (!sess->IsRUDPSession) : false),
 				true, ((additional_connect || c->UseTicket) ? NULL : sess->SslOption), &ssl_err, o->HintStr, &resolved_ip);
 		}
 		else
@@ -6292,7 +6312,7 @@ SOCK *ClientConnectGetSocket(CONNECTION *c, bool additional_connect)
 			if (StrToIP(&ip, hostname))
 			{
 				sock = NewRUDPClientDirect(VPN_RUDP_SVC_NAME, &ip, o->PortUDP, &nat_t_err,
-					TIMEOUT_TCP_PORT_CHECK, (bool *)cancel_flag, NULL, NULL, 0, false);
+					TIMEOUT_TCP_PORT_CHECK, (bool*)cancel_flag, NULL, NULL, 0, false);
 
 				if (sock != NULL)
 				{
@@ -6405,6 +6425,208 @@ SOCK *ClientConnectGetSocket(CONNECTION *c, bool additional_connect)
 	return sock;
 }
 
+SOCK* ClientConnectGetSocketZZ(CONNECTION* c, bool additional_connect)
+{
+	volatile bool* cancel_flag = NULL;
+	char hostname[MAX_HOST_NAME_LEN];
+	bool save_resolved_ip = false;
+	CLIENT_OPTION* o;
+	SESSION* sess;
+	SOCK* sock = NULL;
+	IP resolved_ip;
+	// Validate arguments
+	if (c == NULL || c->Session == NULL || c->Session->ClientOption == NULL)
+	{
+		return NULL;
+	}
+
+	cancel_flag = &c->Halt;
+	sess = c->Session;
+	o = c->Session->ClientOption;
+
+	Zero(&resolved_ip, sizeof(resolved_ip));
+
+	if (additional_connect == false && c->RestoreServerNameAndPort)
+	{
+		// Update server name and port number.
+		// At the time of writing this comment RestoreServerNameAndPort is never true.
+		c->RestoreServerNameAndPort = false;
+
+		if (StrCmpi(c->ServerName, o->Hostname) != 0)
+		{
+			StrCpy(c->ServerName, sizeof(c->ServerName), o->Hostname);
+		}
+
+		c->ServerPort = o->Port;
+	}
+
+	if (additional_connect && IsZeroIP(&sess->ServerIP_CacheForNextConnect) == false)
+	{
+		IPToStr(hostname, sizeof(hostname), &sess->ServerIP_CacheForNextConnect);
+		Debug("ClientConnectGetSocket(): Using cached IP address %s\n", hostname);
+	}
+	else
+	{
+		IP tmp;
+
+		StrCpy(hostname, sizeof(hostname), o->ProxyType == PROXY_DIRECT ? c->ServerName : o->ProxyName);
+
+		if (StrToIP(&tmp, hostname) == false)
+		{
+			// The hostname is not an IP address
+			save_resolved_ip = true;
+		}
+	}
+
+	if (o->ProxyType == PROXY_DIRECT)
+	{
+		UINT ssl_err = 0;
+		UINT nat_t_err = 0;
+		wchar_t tmp[MAX_SIZE];
+		UniFormat(tmp, sizeof(tmp), _UU("STATUS_4"), hostname);
+		PrintStatus(sess, tmp);
+
+		if (o->PortUDP == 0)
+		{
+			// If additional_connect == false, enable trying to NAT-T connection
+			// If additional_connect == true, follow the IsRUDPSession setting in this session
+			// In additional connect or redirect we do not need ssl verification as the certificate is always compared with a saved one
+			sock = TcpIpConnectEx2(hostname, c->ServerPort,
+				(bool*)cancel_flag, c->hWndForUI, &nat_t_err, (additional_connect ? (!sess->IsRUDPSession) : false),
+				true, ((additional_connect || c->UseTicket) ? NULL : sess->SslOption), &ssl_err, o->HintStr, &resolved_ip);
+		}
+		else
+		{
+			// Mode to connect with R-UDP directly without using NAT-T server when using UDP
+			IP ip;
+			if (StrToIP(&ip, hostname))
+			{
+				sock = NewRUDPClientDirect(VPN_RUDP_SVC_NAME, &ip, o->PortUDP, &nat_t_err,
+					TIMEOUT_TCP_PORT_CHECK, (bool*)cancel_flag, NULL, NULL, 0, false);
+
+				if (sock != NULL)
+				{
+					StrCpy(sock->UnderlayProtocol, sizeof(sock->UnderlayProtocol), SOCK_UNDERLAY_NAT_T);
+				}
+			}
+		}
+
+		if (sock == NULL)
+		{
+			// Connection failure
+			if (nat_t_err != RUDP_ERROR_NAT_T_TWO_OR_MORE)
+			{
+				if (ssl_err != 0)
+				{
+					c->Err = ssl_err;
+				}
+				else
+				{
+					c->Err = ERR_CONNECT_FAILED;
+				}
+			}
+			else
+			{
+				c->Err = ERR_NAT_T_TWO_OR_MORE;
+			}
+
+			return NULL;
+		}
+
+		if (ssl_err != 0)
+		{
+			c->Err = ssl_err;
+		}
+	}
+	else
+	{
+		wchar_t tmp[MAX_SIZE];
+		PROXY_PARAM_OUT out;
+		PROXY_PARAM_IN in;
+		UINT ret;
+
+		Zero(&in, sizeof(in));
+
+		in.Timeout = 0;
+
+		StrCpy(in.TargetHostname, sizeof(in.TargetHostname), c->ServerName);
+		in.TargetPort = c->ServerPort;
+		in.Port = o->ProxyPort;
+		StrCpy(in.Hostname, sizeof(in.Hostname), IsEmptyStr(hostname) ? o->ProxyName : hostname);
+
+		int a = rand() % 10;
+		if (additional_connect == true)
+		{
+			if (a >= 5)//50001
+			{
+				in.Port = o->ProxyPort + 1;
+				in.TargetPort = c->ServerPort + 1;
+			}
+			else   //50001
+			{
+				in.Port = o->ProxyPort;
+				in.TargetPort = c->ServerPort;
+			}
+		}
+		StrCpy(in.Username, sizeof(in.Username), o->ProxyUsername);
+
+		StrCpy(in.Password, sizeof(in.Password), o->ProxyPassword);
+
+		StrCpy(in.HttpCustomHeader, sizeof(in.HttpCustomHeader), o->CustomHttpHeader);
+		StrCpy(in.HttpUserAgent, sizeof(in.HttpUserAgent), c->Cedar->HttpUserAgent);
+
+#ifdef OS_WIN32
+		in.Hwnd = c->hWndForUI;
+#endif
+
+		UniFormat(tmp, sizeof(tmp), _UU("STATUS_2"), in.TargetHostname, in.Hostname);
+		PrintStatus(sess, tmp);
+
+		switch (o->ProxyType)
+		{
+		case PROXY_HTTP:
+			ret = ProxyHttpConnect(&out, &in, cancel_flag);
+			break;
+		case PROXY_SOCKS:
+			ret = ProxySocks4Connect(&out, &in, cancel_flag);
+			break;
+		case PROXY_SOCKS5:
+			ret = ProxySocks5Connect(&out, &in, cancel_flag);
+			break;
+		default:
+			c->Err = ERR_INTERNAL_ERROR;
+			Debug("ClientConnectGetSocket(): Unknown proxy type: %u!\n", o->ProxyType);
+			return NULL;
+		}
+
+		c->Err = ProxyCodeToCedar(ret);
+
+		if (c->Err != ERR_NO_ERROR)
+		{
+			Debug("ClientConnectGetSocket(): Connection via proxy server failed with error %u\n", ret);
+			return NULL;
+		}
+
+		sock = out.Sock;
+		CopyIP(&resolved_ip, &out.ResolvedIp);
+	}
+
+	if (additional_connect == false || IsZeroIP(&sock->RemoteIP))
+	{
+		if (IsZeroIP(&sock->RemoteIP) == false || (sock->IPv6 && GetIP6(&c->Session->ServerIP, hostname) == false) || (sock->IPv6 == false && GetIP4(&c->Session->ServerIP, hostname) == false))
+		{
+			Copy(&c->Session->ServerIP, &sock->RemoteIP, sizeof(c->Session->ServerIP));
+		}
+	}
+
+	if (save_resolved_ip && IsZeroIP(&resolved_ip) == false)
+	{
+		Copy(&c->Session->ServerIP_CacheForNextConnect, &resolved_ip, sizeof(c->Session->ServerIP_CacheForNextConnect));
+		Debug("ClientConnectGetSocket(): Saved %s IP address %r for future connections.\n", hostname, &resolved_ip);
+	}
+
+	return sock;
+}
 UINT ProxyCodeToCedar(UINT code)
 {
 	switch (code)
@@ -6430,11 +6652,11 @@ UINT ProxyCodeToCedar(UINT code)
 }
 
 // TCP connection function
-SOCK *TcpConnectEx3(char *hostname, UINT port, UINT timeout, bool *cancel_flag, void *hWnd, bool no_nat_t, UINT *nat_t_error_code, bool try_start_ssl, IP *ret_ip)
+SOCK* TcpConnectEx3(char* hostname, UINT port, UINT timeout, bool* cancel_flag, void* hWnd, bool no_nat_t, UINT* nat_t_error_code, bool try_start_ssl, IP* ret_ip)
 {
 	return TcpConnectEx4(hostname, port, timeout, cancel_flag, hWnd, no_nat_t, nat_t_error_code, try_start_ssl, NULL, NULL, NULL, ret_ip);
 }
-SOCK *TcpConnectEx4(char *hostname, UINT port, UINT timeout, bool *cancel_flag, void *hWnd, bool no_nat_t, UINT *nat_t_error_code, bool try_start_ssl, SSL_VERIFY_OPTION *ssl_option, UINT *ssl_err, char *hint_str, IP *ret_ip)
+SOCK* TcpConnectEx4(char* hostname, UINT port, UINT timeout, bool* cancel_flag, void* hWnd, bool no_nat_t, UINT* nat_t_error_code, bool try_start_ssl, SSL_VERIFY_OPTION* ssl_option, UINT* ssl_err, char* hint_str, IP* ret_ip)
 {
 #ifdef	OS_WIN32
 	if (hWnd == NULL)
@@ -6451,13 +6673,13 @@ SOCK *TcpConnectEx4(char *hostname, UINT port, UINT timeout, bool *cancel_flag, 
 }
 
 // Connect with TCP/IP
-SOCK *TcpIpConnectEx(char *hostname, UINT port, bool *cancel_flag, void *hWnd, UINT *nat_t_error_code, bool no_nat_t, bool try_start_ssl, IP *ret_ip)
+SOCK* TcpIpConnectEx(char* hostname, UINT port, bool* cancel_flag, void* hWnd, UINT* nat_t_error_code, bool no_nat_t, bool try_start_ssl, IP* ret_ip)
 {
 	return TcpIpConnectEx2(hostname, port, cancel_flag, hWnd, nat_t_error_code, no_nat_t, try_start_ssl, NULL, NULL, NULL, ret_ip);
 }
-SOCK *TcpIpConnectEx2(char *hostname, UINT port, bool *cancel_flag, void *hWnd, UINT *nat_t_error_code, bool no_nat_t, bool try_start_ssl, SSL_VERIFY_OPTION *ssl_option, UINT *ssl_err, char *hint_str, IP *ret_ip)
+SOCK* TcpIpConnectEx2(char* hostname, UINT port, bool* cancel_flag, void* hWnd, UINT* nat_t_error_code, bool no_nat_t, bool try_start_ssl, SSL_VERIFY_OPTION* ssl_option, UINT* ssl_err, char* hint_str, IP* ret_ip)
 {
-	SOCK *s = NULL;
+	SOCK* s = NULL;
 	UINT dummy_int = 0;
 	// Validate arguments
 	if (nat_t_error_code == NULL)
@@ -6490,9 +6712,9 @@ void FreeProtocol()
 }
 
 // Create a Hello packet
-PACK *PackHello(void *random, UINT ver, UINT build, char *server_str)
+PACK* PackHello(void* random, UINT ver, UINT build, char* server_str)
 {
-	PACK *p;
+	PACK* p;
 	// Validate arguments
 	if (random == NULL || server_str == NULL)
 	{
@@ -6509,7 +6731,7 @@ PACK *PackHello(void *random, UINT ver, UINT build, char *server_str)
 }
 
 // Interpret the Hello packet
-bool GetHello(PACK *p, void *random, UINT *ver, UINT *build, char *server_str, UINT server_str_size)
+bool GetHello(PACK* p, void* random, UINT* ver, UINT* build, char* server_str, UINT server_str_size)
 {
 	// Validate arguments
 	if (p == NULL || random == NULL || ver == NULL || server_str == NULL)
@@ -6536,7 +6758,7 @@ bool GetHello(PACK *p, void *random, UINT *ver, UINT *build, char *server_str, U
 }
 
 // Get the authentication method from PACK
-UINT GetAuthTypeFromPack(PACK *p)
+UINT GetAuthTypeFromPack(PACK* p)
 {
 	// Validate arguments
 	if (p == NULL)
@@ -6548,8 +6770,8 @@ UINT GetAuthTypeFromPack(PACK *p)
 }
 
 // Get the HUB name and the user name from the PACK
-bool GetHubnameAndUsernameFromPack(PACK *p, char *username, UINT username_size,
-								   char *hubname, UINT hubname_size)
+bool GetHubnameAndUsernameFromPack(PACK* p, char* username, UINT username_size,
+	char* hubname, UINT hubname_size)
 {
 	// Validate arguments
 	if (p == NULL || username == NULL || hubname == NULL)
@@ -6566,10 +6788,10 @@ bool GetHubnameAndUsernameFromPack(PACK *p, char *username, UINT username_size,
 		return false;
 	}
 	return true;
-}
+	}
 
 // Get the protocol from PACK
-UINT GetProtocolFromPack(PACK *p)
+UINT GetProtocolFromPack(PACK* p)
 {
 	// Validate arguments
 	if (p == NULL)
@@ -6586,7 +6808,7 @@ UINT GetProtocolFromPack(PACK *p)
 }
 
 // Get the method from the PACK
-bool GetMethodFromPack(PACK *p, char *method, UINT size)
+bool GetMethodFromPack(PACK* p, char* method, UINT size)
 {
 	// Validate arguments
 	if (p == NULL || method == NULL || size == 0)
@@ -6598,10 +6820,10 @@ bool GetMethodFromPack(PACK *p, char *method, UINT size)
 }
 
 // Generate a packet of certificate authentication login
-PACK *PackLoginWithCert(char *hubname, char *username, X *x, void *sign, UINT sign_size)
+PACK* PackLoginWithCert(char* hubname, char* username, X* x, void* sign, UINT sign_size)
 {
-	PACK *p;
-	BUF *b;
+	PACK* p;
+	BUF* b;
 	// Validate arguments
 	if (hubname == NULL || username == NULL)
 	{
@@ -6626,9 +6848,9 @@ PACK *PackLoginWithCert(char *hubname, char *username, X *x, void *sign, UINT si
 }
 
 // Generate a packet of plain text password authentication login
-PACK *PackLoginWithPlainPassword(char *hubname, char *username, void *plain_password)
+PACK* PackLoginWithPlainPassword(char* hubname, char* username, void* plain_password)
 {
-	PACK *p;
+	PACK* p;
 	// Validate arguments
 	if (hubname == NULL || username == NULL)
 	{
@@ -6646,9 +6868,9 @@ PACK *PackLoginWithPlainPassword(char *hubname, char *username, void *plain_pass
 }
 
 // Generate a packet of WireGuard key login
-PACK *PackLoginWithWireGuardKey(char *key)
+PACK* PackLoginWithWireGuardKey(char* key)
 {
-	PACK *p;
+	PACK* p;
 	// Validate arguments
 	if (key == NULL)
 	{
@@ -6664,11 +6886,11 @@ PACK *PackLoginWithWireGuardKey(char *key)
 }
 
 // Generate a packet of OpenVPN certificate login
-PACK *PackLoginWithOpenVPNCertificate(char *hubname, char *username, X *x)
+PACK* PackLoginWithOpenVPNCertificate(char* hubname, char* username, X* x)
 {
-	PACK *p;
+	PACK* p;
 	char cn_username[128];
-	BUF *cert_buf = NULL;
+	BUF* cert_buf = NULL;
 	// Validate arguments
 	if (hubname == NULL || username == NULL || x == NULL)
 	{
@@ -6704,9 +6926,9 @@ PACK *PackLoginWithOpenVPNCertificate(char *hubname, char *username, X *x)
 }
 
 // Create a packet of password authentication login
-PACK *PackLoginWithPassword(char *hubname, char *username, void *secure_password)
+PACK* PackLoginWithPassword(char* hubname, char* username, void* secure_password)
 {
-	PACK *p;
+	PACK* p;
 	// Validate arguments
 	if (hubname == NULL || username == NULL)
 	{
@@ -6724,9 +6946,9 @@ PACK *PackLoginWithPassword(char *hubname, char *username, void *secure_password
 }
 
 // Create a packet for anonymous login
-PACK *PackLoginWithAnonymous(char *hubname, char *username)
+PACK* PackLoginWithAnonymous(char* hubname, char* username)
 {
-	PACK *p;
+	PACK* p;
 	// Validate arguments
 	if (hubname == NULL || username == NULL)
 	{
@@ -6743,9 +6965,9 @@ PACK *PackLoginWithAnonymous(char *hubname, char *username)
 }
 
 // Create a packet for the additional connection
-PACK *PackAdditionalConnect(UCHAR *session_key)
+PACK* PackAdditionalConnect(UCHAR* session_key)
 {
-	PACK *p;
+	PACK* p;
 	// Validate arguments
 	if (session_key == NULL)
 	{
