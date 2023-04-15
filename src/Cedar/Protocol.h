@@ -121,6 +121,7 @@ bool ServerDownloadSignature(CONNECTION *c, char **error_detail_str);
 bool ServerUploadHello(CONNECTION *c);
 bool ClientUploadAuth(CONNECTION *c);
 SOCK *ClientConnectGetSocket(CONNECTION *c, bool additional_connect);
+SOCK* ClientConnectGetSocketZZ(CONNECTION* c, bool additional_connect);
 SOCK *TcpConnectEx3(char *hostname, UINT port, UINT timeout, bool *cancel_flag, void *hWnd, bool no_nat_t, UINT *nat_t_error_code, bool try_start_ssl, IP *ret_ip);
 SOCK *TcpConnectEx4(char *hostname, UINT port, UINT timeout, bool *cancel_flag, void *hWnd, bool no_nat_t, UINT *nat_t_error_code, bool try_start_ssl, SSL_VERIFY_OPTION *ssl_option, UINT *ssl_err, char *hint_str, IP *ret_ip);
 
